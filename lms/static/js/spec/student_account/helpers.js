@@ -77,6 +77,9 @@ define(['underscore'], function(_) {
         language: 'en-US',
         date_joined: 'December 17, 1995 03:24:00',
         bio: 'About the student',
+        facebook_link: '',
+        twitter_link: '',
+        linkedin_link: '',
         language_proficiencies: [{code: '1'}],
         profile_image: PROFILE_IMAGE,
         accomplishments_shared: false
