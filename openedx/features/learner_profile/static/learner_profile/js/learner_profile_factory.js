@@ -103,6 +103,10 @@
             });
 
             sectionOneFieldViews = [
+                new LearnerProfileFieldsView.SocialLinkIconsView({
+                    model: accountSettingsModel,
+                }),
+
                 new FieldsView.DateFieldView({
                     title: gettext('Joined'),
                     titleVisible: true,
