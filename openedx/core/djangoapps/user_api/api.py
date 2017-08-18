@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_noop
 from django_countries import countries
 
 import accounts
@@ -148,6 +149,8 @@ class RegistrationFormFactory(object):
         "goals",
         "honor_code",
         "terms_of_service",
+        "profession",
+        "specialty",
     ]
 
     def _is_field_visible(self, field_name):
@@ -471,6 +474,88 @@ class RegistrationFormFactory(object):
             include_default_option=True,
             required=required
         )
+
+    def _add_profession_field(self, form_desc, required=True):
+        """Add a profession field to a form description.
+
+        Arguments:
+            form_desc: A form description
+
+        Keyword Arguments:
+            required (bool): Whether this field is required; defaults to True
+
+        """
+        # Translators: This label appears above a dropdown menu on the registration
+        # form used to select the user's profession
+        profession_label = _(u"Profession")
+
+        profession_options = configuration_helpers.get_value('PROFESSION_OPTIONS')
+        if profession_options is None:
+            # if there are no PROFESSION_OPTIONS set for this site make it a text box
+            form_desc.add_field(
+                "profession",
+                label=profession_label,
+                field_type="text",
+                include_default_option=False,
+                required=required,
+                error_messages={
+                    "required": accounts.REQUIRED_FIELD_PROFESSION_TEXT_MSG
+                }
+            )
+        else:
+            options = [(unicode(profession.lower()), ugettext_noop(profession)) for profession in profession_options]
+            form_desc.add_field(
+                "profession",
+                label=profession_label,
+                field_type="select",
+                options=options,
+                include_default_option=True,
+                required=required,
+                error_messages={
+                    "required": accounts.REQUIRED_FIELD_PROFESSION_SELECT_MSG
+                }
+            )
+
+    def _add_specialty_field(self, form_desc, required=True):
+        """Add a specialty field to a form description.
+
+        Arguments:
+            form_desc: A form description
+
+        Keyword Arguments:
+            required (bool): Whether this field is required; defaults to True
+
+        """
+        # Translators: This label appears above a dropdown menu on the registration
+        # form used to select the user's specialty
+        specialty_label = _(u"Specialty")
+
+        specialty_options = configuration_helpers.get_value('SPECIALTY_OPTIONS')
+        if specialty_options is None:
+            # if there are no SPECIALTY_OPTIONS set for this site make it a text box
+            form_desc.add_field(
+                "specialty",
+                label=specialty_label,
+                field_type="text",
+                include_default_option=False,
+                required=required,
+                error_messages={
+                    "required": accounts.REQUIRED_FIELD_SPECIALTY_TEXT_MSG
+                }
+            )
+        else:
+            options = [(unicode(specialty.lower()), ugettext_noop(specialty)) for specialty in specialty_options]
+            form_desc.add_field(
+                "specialty",
+                label=specialty_label,
+                field_type="select",
+                options=options,
+                include_default_option=True,
+                required=required,
+                error_messages={
+                    "required": accounts.REQUIRED_FIELD_SPECIALTY_SELECT_MSG
+                }
+            )
 
     def _add_mailing_address_field(self, form_desc, required=True):
         """Add a mailing address field to a form description.
