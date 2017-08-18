@@ -902,7 +902,8 @@ class TestGetHtmlMethod(BaseTestXmodule):
         context = self.item_descriptor.render(STUDENT_VIEW).content
 
         self.assertIn("'download_video_link': 'https://mp4.com/dm.mp4'", context)
-        self.assertIn('"streams": "1.00:https://yt.com/?v=v0TFmdO4ZP0"', context)
+        #  VAL's youtube source will not overwrite external youtube source i.e 3_yD_cEKoCk
+        self.assertIn('"streams": "1.00:3_yD_cEKoCk"', context)
         self.assertIn(
             '"sources": ["https://webm.com/dw.webm", "https://mp4.com/dm.mp4", "https://hls.com/hls.m3u8"]', context
         )
@@ -1113,21 +1114,12 @@ class TestVideoDescriptorInitialization(BaseTestXmodule):
             },
             ['https://webm.com/dw.webm']
         ),
-        (
-            {
-                'desktop_webm': None,
-                'hls': None,
-                'youtube': None,
-                'desktop_mp4': None
-            },
-            ['https://www.youtube.com/watch?v=3_yD_cEKoCk']
-        ),
     )
     @ddt.unpack
     @patch('xmodule.video_module.video_module.HLSPlaybackEnabledFlag.feature_enabled', Mock(return_value=True))
     def test_val_encoding_in_context(self, val_video_encodings, video_url):
         """
-        Tests that the val encodings correctly override the video url when the edx video id is set and
+        Tests that the val encodings do not override the video url when the edx video id is set and
         one or more encodings are present.
         """
         with patch('xmodule.video_module.video_module.edxval_api.get_urls_for_profiles') as get_urls_for_profiles:
@@ -1136,7 +1128,12 @@ class TestVideoDescriptorInitialization(BaseTestXmodule):
                 data='<video display_name="Video" download_video="true" edx_video_id="12345-67890">[]</video>'
             )
             context = self.item_descriptor.get_context()
-            self.assertEqual(context['transcripts_basic_tab_metadata']['video_url']['value'], video_url)
+
+        # component is initialized with external youtube source i.e https://www.youtube.com/watch?v=3_yD_cEKoCk
+        # val encodings should not overwrite any external youtube source.
+        expected_video_url = ['https://www.youtube.com/watch?v=3_yD_cEKoCk']
+        self.assertEqual(context['transcripts_basic_tab_metadata']['video_url']['value'], expected_video_url)
+        self.assertNotEqual(context['transcripts_basic_tab_metadata']['video_url']['value'], video_url)
 
 
 @attr(shard=1)
@@ -1230,7 +1227,7 @@ class TestEditorSavedMethod(BaseTestXmodule):
     @patch('xmodule.video_module.video_module.edxval_api.get_url_for_profile', Mock(return_value='test_yt_id'))
     def test_editor_saved_with_yt_val_profile(self, default_store):
         """
-        Verify editor saved overrides `youtube_id_1_0` when a youtube val profile is there
+        Verify editor saved do not override `youtube_id_1_0` when a youtube val profile is there
         for a given `edx_video_id`.
         """
         self.MODULESTORE = default_store
@@ -1242,7 +1239,7 @@ class TestEditorSavedMethod(BaseTestXmodule):
         old_metadata = own_metadata(item)
         item.edx_video_id = unicode(uuid4())
         item.editor_saved(self.user, old_metadata, None)
-        self.assertEqual(item.youtube_id_1_0, 'test_yt_id')
+        self.assertEqual(item.youtube_id_1_0, '3_yD_cEKoCk')
 
 
 @ddt.ddt

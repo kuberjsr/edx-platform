@@ -198,6 +198,7 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
         return track_url, transcript_language, sorted_languages
 
     def get_html(self):
+
         track_status = (self.download_track and self.track)
         transcript_download_format = self.transcript_download_format if not track_status else None
         sources = filter(None, self.html5_sources)
@@ -243,8 +244,10 @@ class VideoModule(VideoFields, VideoTranscriptsMixin, VideoStudentViewHandlers, 
                             else:
                                 download_video_link = url
 
-                # set the youtube url
-                if val_video_urls["youtube"]:
+                # priortize external youtube source over VAL's youtube source
+                if self.youtube_id_1_0:
+                    youtube_streams = "1.00:{}".format(self.youtube_id_1_0)
+                elif val_video_urls["youtube"]:
                     youtube_streams = "1.00:{}".format(val_video_urls["youtube"])
 
             except edxval_api.ValInternalError:
@@ -513,15 +516,15 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
 
         if metadata_was_changed_by_user:
             self.edx_video_id = self.edx_video_id and self.edx_video_id.strip()
-
             # We want to override `youtube_id_1_0` with val youtube profile in the first place when someone adds/edits
             # an `edx_video_id` or its underlying YT val profile. Without this, override will only happen when a user
             # saves the video second time. This is because of the syncing of basic and advanced video settings which
             # also syncs val youtube id from basic tab's `Video Url` to advanced tab's `Youtube ID`.
-            if self.edx_video_id and edxval_api:
-                val_youtube_id = edxval_api.get_url_for_profile(self.edx_video_id, 'youtube')
-                if val_youtube_id and self.youtube_id_1_0 != val_youtube_id:
-                    self.youtube_id_1_0 = val_youtube_id
+            if not self.youtube_id_1_0:
+                if self.edx_video_id and edxval_api:
+                    val_youtube_id = edxval_api.get_url_for_profile(self.edx_video_id, 'youtube')
+                    if val_youtube_id and self.youtube_id_1_0 != val_youtube_id:
+                        self.youtube_id_1_0 = val_youtube_id
 
             manage_video_subtitles_save(
                 self,
@@ -691,7 +694,6 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
         Extend context by data for transcript basic tab.
         """
         _context = super(VideoDescriptor, self).get_context()
-
         metadata_fields = copy.deepcopy(self.editable_metadata_fields)
 
         display_name = metadata_fields['display_name']
@@ -699,50 +701,38 @@ class VideoDescriptor(VideoFields, VideoTranscriptsMixin, VideoStudioViewHandler
         video_id = metadata_fields['edx_video_id']
         youtube_id_1_0 = metadata_fields['youtube_id_1_0']
 
-        def get_youtube_link(video_id):
-            """
-            Returns the fully-qualified YouTube URL for the given video identifier
-            """
-            # First try a lookup in VAL. If we have a YouTube entry there, it overrides the
-            # one passed in.
-            if self.edx_video_id and edxval_api:
-                val_youtube_id = edxval_api.get_url_for_profile(self.edx_video_id, "youtube")
-                if val_youtube_id:
-                    video_id = val_youtube_id
-
-            return self.create_youtube_url(video_id)
-
         _ = self.runtime.service(self, "i18n").ugettext
-        video_url.update({
-            'help': _('The URL for your video. This can be a YouTube URL or a link to an .mp4, .ogg, or .webm video file hosted elsewhere on the Internet.'),  # pylint: disable=line-too-long
-            'display_name': _('Default Video URL'),
-            'field_name': 'video_url',
-            'type': 'VideoList',
-            'default_value': [get_youtube_link(youtube_id_1_0['default_value'])]
-        })
 
         source_url = self.create_youtube_url(youtube_id_1_0['value'])
 
-        # First try a lookup in VAL. If any video encoding is found given the video id then
-        # override the source_url with it.
+        # First try a lookup in VAL. If any video encoding is found in given the video id and no external
+        # YouTube source is provided then override the source_url with it.
         if self.edx_video_id and edxval_api:
 
             val_profiles = ['youtube', 'desktop_webm', 'desktop_mp4']
             if HLSPlaybackEnabledFlag.feature_enabled(self.runtime.course_id.for_branch(None)):
                 val_profiles.append('hls')
 
-            # Get video encodings for val profiles.
-            val_video_encodings = edxval_api.get_urls_for_profiles(self.edx_video_id, val_profiles)
-
             # If multiple encodings are there in val, the priority will be: youtube > hls > mp4 and webm.
-            if val_video_encodings.get('youtube'):
-                source_url = self.create_youtube_url(val_video_encodings['youtube'])
-            elif val_video_encodings.get('hls'):
-                source_url = val_video_encodings['hls']
-            elif val_video_encodings.get('desktop_mp4'):
-                source_url = val_video_encodings['desktop_mp4']
-            elif val_video_encodings.get('desktop_webm'):
-                source_url = val_video_encodings['desktop_webm']
+            # Get video encodings for val profiles.
+            if not youtube_id_1_0['value']:
+                val_video_encodings = edxval_api.get_urls_for_profiles(self.edx_video_id, val_profiles)
+                if val_video_encodings.get('youtube'):
+                    source_url = self.create_youtube_url(val_video_encodings['youtube'])
+                elif val_video_encodings.get('hls'):
+                    source_url = val_video_encodings['hls']
+                elif val_video_encodings.get('desktop_mp4'):
+                    source_url = val_video_encodings['desktop_mp4']
+                elif val_video_encodings.get('desktop_webm'):
+                    source_url = val_video_encodings['desktop_webm']
+
+        video_url.update({
+            'help': _('The URL for your video. This can be a YouTube URL or a link to an .mp4, .ogg, or .webm video file hosted elsewhere on the Internet.'),  # pylint: disable=line-too-long
+            'display_name': _('Default Video URL'),
+            'field_name': 'video_url',
+            'type': 'VideoList',
+            'default_value': [youtube_id_1_0['default_value']]
+        })
 
         # Only add if html5 sources do not already contain source_url.
         if source_url and source_url not in video_url['value']:
