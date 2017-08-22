@@ -229,6 +229,7 @@
 
         .social-links {
             font-size: 2rem;
+            padding-top: $baseline/4;
 
             & > span {
                 color: $gray-l4;
@@ -317,7 +318,6 @@
             @include padding-left(0);
             width: 100%;
             margin-top: $baseline;
-            padding-left: 0;
         }
 
         .u-field-textarea {

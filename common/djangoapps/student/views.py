@@ -2747,7 +2747,7 @@ def validate_social_link(social_field, new_social_link):
 
 def format_social_link(social_field, new_social_link):
     """
-    Given a valid social link for a user, return a an absolute url that can be
+    Given a valid social link for a user, return an absolute url that can be
     called directly from within a template. The url can take three forms
     depending on what type of social link was provided:
 
@@ -2764,7 +2764,6 @@ def format_social_link(social_field, new_social_link):
         return 'https://www.{}{}'.format(settings.SOCIAL_PLATFORMS[social_field]['url_stub'], new_social_link)
     else:
         # URLs must be formatted with a 'https://www.' prefix with no hanging '/'
-
         # Strip either the 'http://' or 'https://' prefix
         new_social_link = new_social_link.split("//")[1] if "//" in new_social_link else new_social_link
 

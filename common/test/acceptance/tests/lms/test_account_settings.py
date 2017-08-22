@@ -3,7 +3,6 @@
 End-to-end tests for the Account Settings page.
 """
 from datetime import datetime
-from django.conf import settings
 from unittest import skip
 
 from bok_choy.page_object import XSS_INJECTION
@@ -125,6 +124,7 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
         """
         super(AccountSettingsPageTest, self).setUp()
         self.full_name = XSS_INJECTION
+        self.social_link = ''
         self.username, self.user_id = self.log_in_as_unique_user(full_name=self.full_name)
         self.visit_account_settings_page()
 
@@ -181,7 +181,11 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
             },
             {
                 'title': 'Social Media Links',
-                'fields': [platform.title() + " Link" for platform in settings.SOCIAL_PLATFORMS]
+                'fields': [
+                    'Twitter Link',
+                    'Facebook Link',
+                    'LinkedIn Link',
+                ]
             }
         ]
 
@@ -464,6 +468,27 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
                     'language_proficiencies', [], [{'code': 'ps'}], table='student_languageproficiency'),
                 self.expected_settings_changed_event(
                     'language_proficiencies', [{'code': 'ps'}], [], table='student_languageproficiency'),
+            ],
+            actual_events
+        )
+
+    def test_social_links_field(self):
+        """
+        Test behaviour of one of the social media links field.
+        """
+        self._test_text_field(
+            u'social_links_twitter',
+            u'Twitter Link',
+            self.social_link,
+            u'www.google.com/invalidlink',
+            [u'https://www.twitter.com/edX', self.social_link],
+        )
+
+        actual_events = self.wait_for_events(event_filter=self.settings_changed_event_filter, number_of_matches=2)
+        self.assert_events_match(
+            [
+                self.expected_settings_changed_event('social_links_twitter', self.social_link, 'www.twitter.com/edX'),
+                self.expected_settings_changed_event('social_links_twitter', 'https://www.twitter.com/edX', self.social_link),
             ],
             actual_events
         )

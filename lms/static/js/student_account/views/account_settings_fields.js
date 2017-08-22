@@ -224,24 +224,34 @@
                     }
                 }
             }),
-
             SocialLinkTextFieldView: FieldViews.TextFieldView.extend({
-                fieldTemplate: field_text_account_template,
+                render: function() {
+                    HtmlUtils.setHtml(this.$el, HtmlUtils.template(field_text_account_template)({
+                        id: this.options.valueAttribute + '_' + this.options.platform,
+                        title: this.options.title,
+                        value: this.modelValue(),
+                        message: this.helpMessage,
+                        placeholder: this.options.placeholder || ''
+                    }));
+                    this.delegateEvents();
+                    return this;
+                },
 
                 modelValue: function() {
                     var socialLinks = this.model.get(this.options.valueAttribute);
-                    for (var i=0; i < socialLinks.length; i++) {
-                        if (socialLinks[i].platform == this.options.platform) {
+                    for (var i = 0; i < socialLinks.length; i++) { // eslint-disable-line vars-on-top
+                        if (socialLinks[i].platform === this.options.platform) {
                             return socialLinks[i].social_link;
                         }
                     }
                     return null;
                 },
                 saveValue: function() {
+                    var attributes, value;
                     if (this.persistChanges === true) {
-                        var attributes = {},
-                            value = this.fieldValue() != null ? [{platform: this.options.platform,
-                                social_link: this.fieldValue()}] : [];
+                        attributes = {};
+                        value = this.fieldValue() != null ? [{platform: this.options.platform,
+                            social_link: this.fieldValue()}] : [];
                         attributes[this.options.valueAttribute] = value;
                         this.saveAttributes(attributes);
                     }

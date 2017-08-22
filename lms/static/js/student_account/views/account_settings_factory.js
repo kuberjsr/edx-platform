@@ -22,12 +22,12 @@
             allowEmailChange,
             socialPlatforms
         ) {
-            var accountSettingsElement, userAccountModel, userPreferencesModel, aboutSectionsData,
+            var $accountSettingsElement, userAccountModel, userPreferencesModel, aboutSectionsData,
                 accountsSectionData, ordersSectionData, accountSettingsView, showAccountSettingsPage,
                 showLoadingError, orderNumber, getUserField, userFields, timeZoneDropdownField, countryDropdownField,
-                emailFieldView;
+                emailFieldView, socialFields, platformData;
 
-            accountSettingsElement = $('.wrapper-account-settings');
+            $accountSettingsElement = $('.wrapper-account-settings');
 
             userAccountModel = new UserAccountModel();
             userAccountModel.url = userAccountsApiUrl;
@@ -193,27 +193,27 @@
             ];
 
             // Add the social link fields
-            var socialFields = {
+            socialFields = {
                 title: gettext('Social Media Links'),
                 fields: []
-            }
+            };
 
-            for (var social_platform in socialPlatforms) {
-                var platformData = socialPlatforms[social_platform];
+            for (var socialPlatform in socialPlatforms) {  // eslint-disable-line guard-for-in, no-restricted-syntax, vars-on-top, max-len
+                platformData = socialPlatforms[socialPlatform];
                 socialFields.fields.push(
                     {
                         view: new AccountSettingsFieldViews.SocialLinkTextFieldView({
                             model: userAccountModel,
-                            title: gettext(platformData['display_name'] + ' Link'),
+                            title: gettext(platformData.display_name + ' Link'),
                             valueAttribute: 'social_links',
                             helpMessage: gettext(
-                                'Enter the URL to your ' + platformData['display_name'] + ' profile page ' +
-                                'or your ' + platformData['display_name'] + ' username.'
+                                'Enter the URL to your ' + platformData.display_name + ' profile page ' +
+                                'or your ' + platformData.display_name + ' username.'
                             ),
-                            platform: social_platform,
+                            platform: socialPlatform,
                             persistChanges: true,
-                            placeholder: platformData['example']
-                        }),
+                            placeholder: platformData.example
+                        })
                     }
                 );
             }
@@ -294,7 +294,7 @@
             accountSettingsView = new AccountSettingsView({
                 model: userAccountModel,
                 accountUserId: accountUserId,
-                el: accountSettingsElement,
+                el: $accountSettingsElement,
                 tabSections: {
                     aboutTabSections: aboutSectionsData,
                     accountsTabSections: accountsSectionData,

@@ -137,22 +137,22 @@
             },
 
             render: function() {
-                var social_links = {}
-                for (var platform_name in this.options.social_platforms) {
-                    social_links[platform_name] = null;
-                    for (var link in this.model.get('social_links')) {
-                        if (platform_name == this.model.get('social_links')[link]['platform']) {
-                            social_links[platform_name] = this.model.get('social_links')[link]['social_link'];
+                var socialLinks = {};
+                for (var platformName in this.options.social_platforms) { // eslint-disable-line no-restricted-syntax, guard-for-in, vars-on-top, max-len
+                    socialLinks[platformName] = null;
+                    for (var link in this.model.get('social_links')) { // eslint-disable-line no-restricted-syntax, vars-on-top, max-len
+                        if (platformName === this.model.get('social_links')[link].platform) {
+                            socialLinks[platformName] = this.model.get('social_links')[link].social_link;
                         }
                     }
                 }
 
                 HtmlUtils.setHtml(this.$el, HtmlUtils.template(socialIconsTemplate)({
-                    social_links: social_links
+                    social_links: socialLinks
                 }));
                 return this;
             }
-        })
+        });
 
         return LearnerProfileFieldViews;
     });

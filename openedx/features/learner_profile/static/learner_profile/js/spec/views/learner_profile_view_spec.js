@@ -81,6 +81,11 @@ define(
                 });
 
                 var sectionOneFieldViews = [
+                    new LearnerProfileFields.SocialLinkIconsView({
+                        model: accountSettingsModel,
+                        social_platforms: Helpers.SOCIAL_PLATFORMS
+                    }),
+
                     new FieldViews.DropdownFieldView({
                         title: gettext('Location'),
                         model: accountSettingsModel,

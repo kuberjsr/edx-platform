@@ -105,7 +105,7 @@
             sectionOneFieldViews = [
                 new LearnerProfileFieldsView.SocialLinkIconsView({
                     model: accountSettingsModel,
-                    social_platforms: options.social_platforms,
+                    social_platforms: options.social_platforms
                 }),
 
                 new FieldsView.DateFieldView({
