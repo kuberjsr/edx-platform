@@ -2967,9 +2967,14 @@ ACCOUNT_VISIBILITY_CONFIGURATION = {
     ]
 }
 
-# The current list of social platforms to be shown to the user
-# tied to the stub in the format [stub][username] that links
-# directly to the user's social profile.
+# The current list of social platforms to be shown to the user.
+#
+# url_stub represents the host URL, it must end with a forward
+# slash and represent the profile at https://www.[url_stub][username]
+#
+# The example will be used as a placeholder in the social link
+# input field as well as in some messaging describing an example of a
+# valid link.
 SOCIAL_PLATFORMS = {
     'facebook': {
         'display_name': 'Facebook',

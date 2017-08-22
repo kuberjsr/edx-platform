@@ -194,7 +194,7 @@
 
             // Add the social link fields
             var socialFields = {
-                title: gettext('Social Links'),
+                title: gettext('Social Media Links'),
                 fields: []
             }
 
@@ -207,13 +207,12 @@
                             title: gettext(platformData['display_name'] + ' Link'),
                             valueAttribute: 'social_links',
                             helpMessage: gettext(
-                                'Optionally, link to your ' + platformData['display_name'] +
-                                ' profile from your edX learner profile by adding the URL to ' +
-                                'your personal page or your username.'
+                                'Enter the URL to your ' + platformData['display_name'] + ' profile page ' +
+                                'or your ' + platformData['display_name'] + ' username.'
                             ),
-                            dataStore: {'platform': social_platform},
+                            platform: social_platform,
                             persistChanges: true,
-                            placeholder: gettext('ex: ' + platformData['example'])
+                            placeholder: platformData['example']
                         }),
                     }
                 );

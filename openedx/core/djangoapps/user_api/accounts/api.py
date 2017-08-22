@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.validators import validate_email, ValidationError
 from django.http import HttpResponseForbidden
 from openedx.core.djangoapps.user_api.preferences.api import update_user_preferences
-from openedx.core.djangoapps.user_api.errors import PreferenceValidationError, AccountUpdateError, AccountValidationError
+from openedx.core.djangoapps.user_api.errors import PreferenceValidationError, AccountValidationError
 
 from student.models import User, UserProfile, Registration
 from student import forms as student_forms
@@ -176,7 +176,7 @@ def update_account_settings(requesting_user, update, username=None):
     try:
         # If everything validated, go ahead and save the serializers.
 
-        # We have not found a way using signals to get the language proficiency.
+        # We have not found a way using signals to get the language proficiency changes (grouped by user).
         # As a workaround, store old and new values here and emit them after save is complete.
         if "language_proficiencies" in update:
             old_language_proficiencies = list(existing_user_profile.language_proficiencies.values('code'))

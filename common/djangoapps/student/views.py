@@ -5,7 +5,6 @@ Student Views
 import datetime
 import json
 import logging
-import urllib
 import uuid
 import warnings
 from collections import defaultdict, namedtuple
@@ -2721,7 +2720,8 @@ def validate_new_email(user, new_email):
 
 def validate_social_link(social_field, new_social_link):
     """
-    Given a new social link for a user, assure that the link. The social link can take three forms:
+    Given a new social link for a user, assure that the link takes one of the
+    following forms:
 
     1) A valid url that comes from the correct social site
     2) A valid username
@@ -2739,8 +2739,10 @@ def validate_social_link(social_field, new_social_link):
 
     # Assure that the new link has the either correct website url, a valid username or is empty
     if not (contains_social_url or contains_valid_username or is_empty):
-        raise ValueError(_(' Make sure that you are providing a valid username or URL containing "' +
-                            required_url_stub + '". To remove the field, simply leave it blank.'))
+        raise ValueError(_(
+            ' Make sure that you are providing a valid username or URL containing "' +
+            required_url_stub + '". To remove the field, simply leave it blank.'
+        ))
 
 
 def format_social_link(social_field, new_social_link):
@@ -2750,7 +2752,7 @@ def format_social_link(social_field, new_social_link):
     depending on what type of social link was provided:
 
     1) Given a blank string, return a blank value, representing no link
-    2) Given a valid username, return 'https://www.[platform_name_base]/[username]'
+    2) Given a valid username, return 'https://www.[platform_name_base][username]'
     3) Given a valid URL, return 'https://www.[URL]'
     """
     # Blank social links are already formatted correctly
@@ -2769,7 +2771,7 @@ def format_social_link(social_field, new_social_link):
         # Strip the "www." if it exists
         new_social_link = new_social_link.split("www.")[1] if "www." in new_social_link else new_social_link
 
-        # Assure we do not have a hanging forward slash to ensure compatibility with templating
+        # Assure we do not have a hanging forward slash to ensure compatibility with underscore templating
         new_social_link = new_social_link[:-1] if new_social_link[-1:] == '/' else new_social_link
 
         return 'https://www.{}'.format(new_social_link)

@@ -229,9 +229,9 @@
                 fieldTemplate: field_text_account_template,
 
                 modelValue: function() {
-                    var socialLinks = this.model.get('social_links');
+                    var socialLinks = this.model.get(this.options.valueAttribute);
                     for (var i=0; i < socialLinks.length; i++) {
-                        if (socialLinks[i].platform == this.options.dataStore.platform) {
+                        if (socialLinks[i].platform == this.options.platform) {
                             return socialLinks[i].social_link;
                         }
                     }
@@ -240,7 +240,7 @@
                 saveValue: function() {
                     if (this.persistChanges === true) {
                         var attributes = {},
-                            value = this.fieldValue() ? [{platform: $(this.el).find('.u-field-value').data('platform'),
+                            value = this.fieldValue() != null ? [{platform: this.options.platform,
                                 social_link: this.fieldValue()}] : [];
                         attributes[this.options.valueAttribute] = value;
                         this.saveAttributes(attributes);

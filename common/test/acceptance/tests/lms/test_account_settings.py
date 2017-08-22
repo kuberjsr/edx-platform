@@ -3,6 +3,7 @@
 End-to-end tests for the Account Settings page.
 """
 from datetime import datetime
+from django.conf import settings
 from unittest import skip
 
 from bok_choy.page_object import XSS_INJECTION
@@ -125,7 +126,6 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
         super(AccountSettingsPageTest, self).setUp()
         self.full_name = XSS_INJECTION
         self.username, self.user_id = self.log_in_as_unique_user(full_name=self.full_name)
-        self.facebook_url = ''
         self.visit_account_settings_page()
 
     def test_page_view_event(self):
@@ -180,12 +180,8 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
                 ]
             },
             {
-                'title': 'Social Links',
-                'fields': [
-                    'Facebook Link',
-                    'Twitter Link',
-                    'LinkedIn Link',
-                ]
+                'title': 'Social Media Links',
+                'fields': [platform.title() + " Link" for platform in settings.SOCIAL_PLATFORMS]
             }
         ]
 

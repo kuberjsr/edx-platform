@@ -17,8 +17,8 @@ from . import (
 from openedx.core.djangoapps.user_api import errors
 from openedx.core.djangoapps.user_api.models import UserPreference
 from openedx.core.djangoapps.user_api.serializers import ReadOnlyFieldsSerializerMixin
-from student.views import validate_social_link, format_social_link
 from student.models import UserProfile, LanguageProficiency, SocialLink
+from student.views import validate_social_link, format_social_link
 from .image_helpers import get_profile_image_urls_for_user
 
 
@@ -50,7 +50,7 @@ class LanguageProficiencySerializer(serializers.ModelSerializer):
 
 class SocialLinkSerializer(serializers.ModelSerializer):
     """
-    Class that serializes the SocialLink model for account information.
+    Class that serializes the SocialLink model for the UserProfile object.
     """
     class Meta(object):
         model = SocialLink
@@ -292,22 +292,21 @@ class AccountLegacyProfileSerializer(serializers.HyperlinkedModelSerializer, Rea
             ])
 
         # Update the user's social links
-        social_link_data = self._kwargs['data']['social_links']
-        new_social_link = social_link_data[0] if len(social_link_data) > 0 else ''
-        if new_social_link:
+        social_link_data = self._kwargs['data']['social_links'] if 'social_links' in self._kwargs['data'] else None
+        if social_link_data is not None and len(social_link_data) > 0:
+            new_social_link = social_link_data[0]
             current_social_links = list(instance.social_links.all())
             instance.social_links.all().delete()
 
-            # Add the new social link with correct formatting
             try:
+                # Add the new social link with correct formatting
                 validate_social_link(new_social_link['platform'], new_social_link['social_link'])
                 formatted_link = format_social_link(new_social_link['platform'], new_social_link['social_link'])
                 instance.social_links.bulk_create([
                     SocialLink(user_profile=instance, platform=new_social_link['platform'], social_link=formatted_link)
                 ])
-
-            # If we have encountered any validation errors, return them to the user.
             except ValueError as err:
+                # If we have encountered any validation errors, return them to the user.
                 raise errors.AccountValidationError({
                     'social_links': {
                         "developer_message": u"Error thrown from adding new social link: '{}'".format(err.message),
