@@ -1,0 +1,118 @@
+/*
+  NOTE: If you make significant changes to the design, remember to update the Segment event properties and change
+  the creative property. This will allow us to better track individual performance of each style of the message.
+  Search for the courseware_verified_certificate_upsell promotion ID.
+ */
+$upgrade-message-background-color: #005686;
+$upgrade-message-button-color: #008100;
+
+// Expanded upgrade message
+.vc-message {
+  background: $upgrade-message-background-color;
+  color: white;
+  padding: 20px;
+  position: relative;
+  margin: 0 0 20px;
+  // CSS animation for smooth height transition
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  // Message copy
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    float: left;
+  }
+  ul {
+    clear: left;
+    padding-left: 0;
+    font-size: 0.825rem;
+    margin: 1rem 0 1rem;
+    display: table;
+    > li {
+      list-style: none;
+      display: table-row;
+      &:before {
+        content: "\2022";
+        display: table-cell;
+        padding-right: 10px;
+      }
+      &:after {
+        content: "";
+        display: table-row;
+        height: 0.25rem;
+      }
+    }
+  }
+  img {
+    max-width: 100%;
+  }
+  // Show/hide button
+  .vc-toggle {
+    float: right;
+    color: white;
+  }
+  // Upgrade Button
+  .btn-upgrade {
+    background-color: $upgrade-message-button-color;
+    border-color: $upgrade-message-button-color;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    &:hover {
+      background-color: #1A9B1A;
+      border-color: #1A9B1A;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    }
+  }
+  // Cert image
+  .vc-hero {
+    float: right;
+    clear: both;
+    width: 35%;
+    padding-left: 1rem;
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+// Collapsed upgrade message
+.vc-message.polite {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  min-height: 46px;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  h3 {
+    margin: 0 auto 0 0;
+  }
+  .vc-cta {
+    margin-right: 1rem;
+  }
+  .vc-toggle {
+    order: 99;
+  }
+  .vc-fade:not(.vc-polite-only) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 979px) {
+  .vc-message.polite h3 {
+    clear: both;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .vc-message .vc-hero {
+    display: none !important;
+  }
+}
