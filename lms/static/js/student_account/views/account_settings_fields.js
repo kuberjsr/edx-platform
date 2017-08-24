@@ -230,7 +230,7 @@
                         id: this.options.valueAttribute + '_' + this.options.platform,
                         title: this.options.title,
                         value: this.modelValue(),
-                        message: this.helpMessage,
+                        message: this.options.helpMessage,
                         placeholder: this.options.placeholder || ''
                     }));
                     this.delegateEvents();

@@ -203,5 +203,43 @@ define(['backbone',
 
                 AccountSettingsFieldViewSpecHelpers.verifyAuthField(view, fieldData, requests);
             });
+
+            it('accepts only valid URLs and usernames for the social fields', function() {
+                var fieldData,
+                    view,
+                    $twitterInputField,
+                    invalidEntries,
+                    validEntries;
+                requests = AjaxHelpers.requests(this);
+
+                fieldData = FieldViewsSpecHelpers.createFieldData(AccountSettingsFieldViews.SocialLinkTextFieldView, {
+                    title: 'Twitter Link',
+                    valueAttribute: 'social_links',
+                    helpMessage: 'Add a link to your Twitter profile on your edX profile. ' +
+                        'Enter your Twitter username or the URL to your Twitter profile page.',
+                    platform: 'twitter',
+                    persistChanges: true,
+                    placeholder: 'https://www.twitter.com/username'
+                });
+
+                view = new AccountSettingsFieldViews.SocialLinkTextFieldView(fieldData).render();
+                $twitterInputField = $('#field-input-social_links_twitter');
+
+                invalidEntries = ['www.google.com', 'www.twitter.com/edX.biz', 'www.twiter.com/edX', 'abcdef$'];
+                validEntries = ['www.twitter.com/edX', 'https://twitter.com/edX', 'twitter.com/edX', 'edX'];
+
+                // Ensure that invalid entries throw an error message
+                for (var i = 0; i < invalidEntries.length; i++) { // eslint-disable-line vars-on-top
+                    $twitterInputField.val(invalidEntries[i]).change();
+                    FieldViewsSpecHelpers.expectMessageContains(view, 'Make sure that you are providing a valid');
+                }
+
+                // Ensure that valid entries throw a success message and correctly update the input field
+                for (var j = 0; j < validEntries.length; j++) { // eslint-disable-line vars-on-top
+                    $twitterInputField.val(validEntries[j]).change();
+                    FieldViewsSpecHelpers.expectMessageContains(view, 'Your changes have been saved.');
+                    expect($twitterInputField.val()).toContain('https://');
+                }
+            });
         });
     });

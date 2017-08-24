@@ -94,7 +94,7 @@
 .account-settings-sections {
 
     .section-header {
-        @extend %t-title6;
+        @extend %t-title5;
         @extend %t-strong;
         padding-top: ($baseline/2)*3;
         color: $dark-gray1;
@@ -106,10 +106,9 @@
         border-bottom: 4px solid $m-gray-l4;
 
         .account-settings-header-subtitle {
-            font-size: em(18);
+            font-size: em(14);
             line-height: normal;
             color: $dark-gray;
-            padding-top: 20px;
             padding-bottom: 10px;
         }
 

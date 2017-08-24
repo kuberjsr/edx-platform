@@ -65,7 +65,7 @@
             aboutSectionsData = [
                 {
                     title: gettext('Basic Account Information'),
-                    subtitle: gettext('These settings include basic information about your account. You can also specify additional information and see your linked social accounts on this page.'),  // eslint-disable-line max-len
+                    subtitle: gettext('These settings include basic information about your account.'),
                     fields: [
                         {
                             view: new AccountSettingsFieldViews.ReadonlyFieldView({
@@ -195,6 +195,7 @@
             // Add the social link fields
             socialFields = {
                 title: gettext('Social Media Links'),
+                subtitle: gettext('Optionally, add links to your social media accounts on your edX profile.'),
                 fields: []
             };
 
@@ -207,9 +208,8 @@
                             title: gettext(platformData.display_name + ' Link'),
                             valueAttribute: 'social_links',
                             helpMessage: gettext(
-                                'Add a link to your ' + platformData.display_name + ' profile on your edX profile. ' +
-                                'Enter your ' + platformData.display_name + ' username or the URL to your' +
-                                platformData.display_name + ' profile page.'
+                                'Enter a link to your personal ' + platformData.display_name + ' page, using ' +
+                                'the URL or your username.'
                             ),
                             platform: socialPlatform,
                             persistChanges: true,

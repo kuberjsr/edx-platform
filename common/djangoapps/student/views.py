@@ -2720,7 +2720,7 @@ def validate_new_email(user, new_email):
 
 def validate_social_link(social_field, new_social_link):
     """
-    Given a new social link for a user, assure that the link takes one of the
+    Given a new social link for a user, ensure that the link takes one of the
     following forms:
 
     1) A valid url that comes from the correct social site
@@ -2737,7 +2737,7 @@ def validate_social_link(social_field, new_social_link):
     # Check if the link is blank
     is_empty = not new_social_link
 
-    # Assure that the new link has the either correct website url, a valid username or is empty
+    # Ensure that the new link has the either correct website url, a valid username or is empty
     if not (contains_social_url or contains_valid_username or is_empty):
         raise ValueError(_(
             ' Make sure that you are providing a valid username or a URL that contains "' +
@@ -2770,7 +2770,7 @@ def format_social_link(social_field, new_social_link):
         # Strip the "www." if it exists
         new_social_link = new_social_link.split("www.")[1] if "www." in new_social_link else new_social_link
 
-        # Assure we do not have a hanging forward slash to ensure compatibility with underscore templating
+        # Ensure we do not have a hanging forward slash to ensure compatibility with underscore templating
         new_social_link = new_social_link[:-1] if new_social_link[-1:] == '/' else new_social_link
 
         return 'https://www.{}'.format(new_social_link)
