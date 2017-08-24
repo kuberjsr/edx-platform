@@ -477,7 +477,7 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
         Test behaviour of one of the social media links field.
         """
         self._test_text_field(
-            u'social_links_twitter',
+            u'social_links',
             u'Twitter Link',
             self.social_link,
             u'www.google.com/invalidlink',
@@ -487,8 +487,8 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
         actual_events = self.wait_for_events(event_filter=self.settings_changed_event_filter, number_of_matches=2)
         self.assert_events_match(
             [
-                self.expected_settings_changed_event('social_links_twitter', self.social_link, 'www.twitter.com/edX'),
-                self.expected_settings_changed_event('social_links_twitter', 'https://www.twitter.com/edX', self.social_link),
+                self.expected_settings_changed_event('social_links', self.social_link, 'https://www.twitter.com/edX'),
+                self.expected_settings_changed_event('social_links', 'https://www.twitter.com/edX', self.social_link),
             ],
             actual_events
         )

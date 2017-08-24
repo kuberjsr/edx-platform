@@ -2740,8 +2740,8 @@ def validate_social_link(social_field, new_social_link):
     # Assure that the new link has the either correct website url, a valid username or is empty
     if not (contains_social_url or contains_valid_username or is_empty):
         raise ValueError(_(
-            ' Make sure that you are providing a valid username or URL containing "' +
-            required_url_stub + '". To remove the field, simply leave it blank.'
+            ' Make sure that you are providing a valid username or a URL that contains "' +
+            required_url_stub + '". To remove the link from your edX profile, leave this field blank.'
         ))
 
 

@@ -207,8 +207,9 @@
                             title: gettext(platformData.display_name + ' Link'),
                             valueAttribute: 'social_links',
                             helpMessage: gettext(
-                                'Enter the URL to your ' + platformData.display_name + ' profile page ' +
-                                'or your ' + platformData.display_name + ' username.'
+                                'Add a link to your ' + platformData.display_name + ' profile on your edX profile. ' +
+                                'Enter your ' + platformData.display_name + ' username or the URL to your' +
+                                platformData.display_name + ' profile page.'
                             ),
                             platform: socialPlatform,
                             persistChanges: true,
