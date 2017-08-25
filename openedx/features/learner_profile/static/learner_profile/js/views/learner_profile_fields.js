@@ -138,7 +138,7 @@
 
             render: function() {
                 var socialLinks = {};
-                for (var platformName in this.options.social_platforms) { // eslint-disable-line no-restricted-syntax, guard-for-in, vars-on-top, max-len
+                for (var platformName in this.options.socialPlatforms) { // eslint-disable-line no-restricted-syntax, guard-for-in, vars-on-top, max-len
                     socialLinks[platformName] = null;
                     for (var link in this.model.get('social_links')) { // eslint-disable-line no-restricted-syntax, vars-on-top, max-len
                         if (platformName === this.model.get('social_links')[link].platform) {
@@ -148,7 +148,8 @@
                 }
 
                 HtmlUtils.setHtml(this.$el, HtmlUtils.template(socialIconsTemplate)({
-                    social_links: socialLinks
+                    socialLinks: socialLinks,
+                    ownProfile: this.options.ownProfile
                 }));
                 return this;
             }

@@ -53,13 +53,14 @@ define(
                 });
             };
 
-            var createSocialLinksView = function(socialPlatformLinks) {
+            var createSocialLinksView = function(ownProfile, socialPlatformLinks) {
                 var accountSettingsModel = new UserAccountModel();
                 accountSettingsModel.set({social_platforms: socialPlatformLinks});
 
                 return new LearnerProfileFields.SocialLinkIconsView({
                     model: accountSettingsModel,
-                    social_platforms: ['twitter', 'facebook', 'linkedin']
+                    socialPlatforms: ['twitter', 'facebook', 'linkedin'],
+                    ownProfile: ownProfile
                 });
             };
 
@@ -326,7 +327,7 @@ define(
                         }
                     };
 
-                    socialLinksView = createSocialLinksView(socialPlatformLinks);
+                    socialLinksView = createSocialLinksView(true, socialPlatformLinks);
 
                     // Icons should be present and contain links if defined
                     for (var i = 0; i < Object.keys(socialPlatformLinks); i++) { // eslint-disable-line vars-on-top
@@ -343,6 +344,33 @@ define(
                             expect($icon).toExist();
                             expect(!$icon.parent().is('a'));
                         }
+                    }
+                });
+
+                it('icons are not visible on a profile with no links', function() {
+                    socialPlatformLinks = {
+                        twitter: {
+                            platform: 'twitter',
+                            social_link: ''
+                        },
+                        facebook: {
+                            platform: 'facebook',
+                            social_link: ''
+                        },
+                        linkedin: {
+                            platform: 'linkedin',
+                            social_link: ''
+                        }
+                    };
+
+                    socialLinksView = createSocialLinksView(false, socialPlatformLinks);
+
+                    // Icons should not be present if not defined on another user's profile
+                    for (var i = 0; i < Object.keys(socialPlatformLinks); i++) { // eslint-disable-line vars-on-top
+                        socialPlatform = Object.keys(socialPlatformLinks)[i];
+                        socialLinkData = socialPlatformLinks[socialPlatform];
+                        $icon = socialLinksView.$('span.fa-' + socialPlatform + '-square');
+                        expect($icon).toBe(null);
                     }
                 });
             });
