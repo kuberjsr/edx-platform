@@ -3,13 +3,14 @@ define(['backbone',
     'underscore',
     'edx-ui-toolkit/js/utils/spec-helpers/ajax-helpers',
     'common/js/spec_helpers/template_helpers',
+    'js/student_account/models/user_account_model',
     'js/views/fields',
     'js/spec/views/fields_helpers',
     'js/spec/student_account/account_settings_fields_helpers',
     'js/student_account/views/account_settings_fields',
     'js/student_account/models/user_account_model',
     'string_utils'],
-    function(Backbone, $, _, AjaxHelpers, TemplateHelpers, FieldViews, FieldViewsSpecHelpers,
+    function(Backbone, $, _, AjaxHelpers, TemplateHelpers, UserAccountModel, FieldViews, FieldViewsSpecHelpers,
               AccountSettingsFieldViewSpecHelpers, AccountSettingsFieldViews) {
         'use strict';
 
@@ -205,22 +206,24 @@ define(['backbone',
             });
 
             it('accepts only valid URLs and usernames for the social fields', function() {
-                var fieldData,
-                    view,
+                var view,
                     $twitterInputField,
                     invalidEntries,
-                    validEntries;
+                    validEntries,
+                    userAccountModel;
 
+                userAccountModel = new UserAccountModel();
                 view = new AccountSettingsFieldViews.SocialLinkTextFieldView({
+                    model: userAccountModel,
                     title: 'Twitter Link',
                     valueAttribute: 'social_links',
                     helpMessage: 'Add a link to your Twitter profile on your edX profile. ' +
                         'Enter your Twitter username or the URL to your Twitter profile page.',
                     platform: 'twitter',
                     persistChanges: true,
-                    placeholder: 'https://www.twitter.com/username'
+                    placeholder: 'https://www.twitter.com/username',
                 }).render();
-                
+
                 $twitterInputField = $('#field-input-social_links_twitter');
 
                 invalidEntries = ['www.google.com', 'www.twitter.com/edX.biz', 'www.twiter.com/edX', 'abcdef$'];
