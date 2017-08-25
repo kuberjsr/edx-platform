@@ -53,15 +53,15 @@ define(
                 });
             };
 
-            var createSocialLinksView = function(social_platform_links) {
+            var createSocialLinksView = function(socialPlatformLinks) {
                 var accountSettingsModel = new UserAccountModel();
-                accountSettingsModel.set({ social_platforms: social_platform_links });
+                accountSettingsModel.set({social_platforms: socialPlatformLinks});
 
                 return new LearnerProfileFields.SocialLinkIconsView({
                     model: accountSettingsModel,
                     social_platforms: ['twitter', 'facebook', 'linkedin']
                 });
-            }
+            };
 
             var createFakeImageFile = function(size) {
                 var fileFakeData = 'i63ljc6giwoskyb9x5sw0169bdcmcxr3cdz8boqv0lik971972cmd6yknvcxr5sw0nvc169bdcmcxsdf';
@@ -304,42 +304,47 @@ define(
             });
 
             describe('SocialLinkIconsView', function() {
+                var socialPlatformLinks,
+                    socialLinkData,
+                    socialLinksView,
+                    socialPlatform,
+                    $icon;
+
                 it('icons are visible and links to social profile if added in account settings', function() {
-                    var social_platform_links = {
-                        'twitter': {
+                    socialPlatformLinks = {
+                        twitter: {
                             platform: 'twitter',
                             social_link: 'https://www.twitter.com/edX'
                         },
-                        'facebook': {
+                        facebook: {
                             platform: 'facebook',
                             social_link: 'https://www.facebook.com/edX'
                         },
-                        'linkedin': {
+                        linkedin: {
                             platform: 'linkedin',
                             social_link: ''
                         }
                     };
 
-                    var socialLinksView = createSocialLinksView(social_platform_links);
+                    socialLinksView = createSocialLinksView(socialPlatformLinks);
 
                     // Icons should be present and contain links if defined
-                    for (var i = 0; i < Object.keys(social_platform_links); i++) {
-                        var social_platform = Object.keys(social_platform_links)[i];
-                        var social_link_data = social_platform_links[social_platform];
-                        var $icon;
-                        if (social_link_data.social_link) {
+                    for (var i = 0; i < Object.keys(socialPlatformLinks); i++) { //eslint-disable-line vars-on-top
+                        socialPlatform = Object.keys(socialPlatformLinks)[i];
+                        socialLinkData = socialPlatformLinks[socialPlatform];
+                        if (socialLinkData.social_link) {
                             // Icons with a social_link value should be displayed with a surrounding link
                             $icon = socialLinksView.$('span.fa-' + social_platform + '-square');
-                            expect(icon).toExist();
-                            expect(icon.parent().is('a'));
+                            expect($icon).toExist();
+                            expect($icon.parent().is('a'));
                         } else {
                             // Icons without a social_link value should be displayed without a surrounding link
                             $icon = socialLinksView.$('span.fa-' + social_platform + '-square');
-                            expect(icon).toExist();
-                            expect(!icon.parent().is('a'));
+                            expect($icon).toExist();
+                            expect(!$icon.parent().is('a'));
                         }
                     }
-                })
+                });
             });
         });
     });

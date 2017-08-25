@@ -210,7 +210,6 @@ define(['backbone',
                     $twitterInputField,
                     invalidEntries,
                     validEntries;
-                requests = AjaxHelpers.requests(this);
 
                 fieldData = FieldViewsSpecHelpers.createFieldData(AccountSettingsFieldViews.SocialLinkTextFieldView, {
                     title: 'Twitter Link',

@@ -484,15 +484,6 @@ class AccountSettingsPageTest(AccountSettingsTestMixin, AcceptanceTest):
             [u'https://www.twitter.com/edX', self.social_link],
         )
 
-        actual_events = self.wait_for_events(event_filter=self.settings_changed_event_filter, number_of_matches=2)
-        self.assert_events_match(
-            [
-                self.expected_settings_changed_event('social_links', self.social_link, 'https://www.twitter.com/edX'),
-                self.expected_settings_changed_event('social_links', 'https://www.twitter.com/edX', self.social_link),
-            ],
-            actual_events
-        )
-
     def test_linked_accounts(self):
         """
         Test that fields for third party auth providers exist.
