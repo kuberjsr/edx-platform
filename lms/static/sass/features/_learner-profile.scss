@@ -234,6 +234,20 @@
             & > span {
                 color: $gray-l4;
             }
+
+            a {
+                .fa-facebook-square {
+                    color: $facebook-blue;
+                }
+
+                .fa-twitter-square {
+                    color: $twitter-blue;
+                }
+
+                .fa-linkedin-square {
+                    color: $linkedin-blue;
+                }
+            }
         }
 
         .u-field {
