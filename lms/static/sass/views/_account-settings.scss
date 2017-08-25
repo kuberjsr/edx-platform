@@ -102,7 +102,7 @@
 
     .section {
         background-color: $white;
-        margin-top: $baseline;
+        margin: $baseline 5% 0;
         border-bottom: 4px solid $m-gray-l4;
 
         .account-settings-header-subtitle {
@@ -116,6 +116,7 @@
 
             .u-field {
                 border-bottom: 2px solid $m-gray-l4;
+                padding: $baseline*0.75 0;
 
                 .field {
                     width: 30%;
@@ -300,7 +301,8 @@
 
                 .u-field-message {
                     position: relative;
-                    padding: 24px 0 0 ($baseline*5);
+                    padding: $baseline*0.75 0 0 ($baseline*4);
+                    width: 60%;
 
                     .u-field-message-notification {
                         position: absolute;

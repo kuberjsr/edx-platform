@@ -329,17 +329,17 @@ define(
                     socialLinksView = createSocialLinksView(socialPlatformLinks);
 
                     // Icons should be present and contain links if defined
-                    for (var i = 0; i < Object.keys(socialPlatformLinks); i++) { //eslint-disable-line vars-on-top
+                    for (var i = 0; i < Object.keys(socialPlatformLinks); i++) { // eslint-disable-line vars-on-top
                         socialPlatform = Object.keys(socialPlatformLinks)[i];
                         socialLinkData = socialPlatformLinks[socialPlatform];
                         if (socialLinkData.social_link) {
                             // Icons with a social_link value should be displayed with a surrounding link
-                            $icon = socialLinksView.$('span.fa-' + social_platform + '-square');
+                            $icon = socialLinksView.$('span.fa-' + socialPlatform + '-square');
                             expect($icon).toExist();
                             expect($icon.parent().is('a'));
                         } else {
                             // Icons without a social_link value should be displayed without a surrounding link
-                            $icon = socialLinksView.$('span.fa-' + social_platform + '-square');
+                            $icon = socialLinksView.$('span.fa-' + socialPlatform + '-square');
                             expect($icon).toExist();
                             expect(!$icon.parent().is('a'));
                         }

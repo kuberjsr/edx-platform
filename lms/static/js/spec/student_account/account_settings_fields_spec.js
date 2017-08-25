@@ -211,7 +211,7 @@ define(['backbone',
                     invalidEntries,
                     validEntries;
 
-                fieldData = FieldViewsSpecHelpers.createFieldData(AccountSettingsFieldViews.SocialLinkTextFieldView, {
+                view = new AccountSettingsFieldViews.SocialLinkTextFieldView({
                     title: 'Twitter Link',
                     valueAttribute: 'social_links',
                     helpMessage: 'Add a link to your Twitter profile on your edX profile. ' +
@@ -219,9 +219,8 @@ define(['backbone',
                     platform: 'twitter',
                     persistChanges: true,
                     placeholder: 'https://www.twitter.com/username'
-                });
-
-                view = new AccountSettingsFieldViews.SocialLinkTextFieldView(fieldData).render();
+                }).render();
+                
                 $twitterInputField = $('#field-input-social_links_twitter');
 
                 invalidEntries = ['www.google.com', 'www.twitter.com/edX.biz', 'www.twiter.com/edX', 'abcdef$'];
