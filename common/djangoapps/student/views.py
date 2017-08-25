@@ -2730,7 +2730,7 @@ def validate_social_link(social_field, new_social_link):
     # Check if the link contains a valid url to the core domain
     required_url_stub = settings.SOCIAL_PLATFORMS[social_field]['url_stub']
     contains_social_url = required_url_stub in new_social_link \
-                          and '.' not in new_social_link.replace(required_url_stub, '')
+        and '.' not in new_social_link.replace(required_url_stub, '')
 
     # Check if the link contains a valid username
     contains_valid_username = is_valid_username(new_social_link)
