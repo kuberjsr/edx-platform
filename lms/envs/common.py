@@ -2989,7 +2989,7 @@ SOCIAL_PLATFORMS = {
     'linkedin': {
         'display_name': 'LinkedIn',
         'url_stub': 'linkedin.com/in/',
-        'example': 'www.linkedin.com/in/username-123456'
+        'example': 'www.linkedin.com/in/profile-id'
     }
 }
 

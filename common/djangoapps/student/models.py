@@ -2371,7 +2371,7 @@ class SocialLink(models.Model):  # pylint: disable=model-missing-unicode
     Each entry has a display name, a url_stub that describes a required
     component of the stored URL and an example of a valid URL.
 
-    The stored social_link value must adhere to the form 'https://www.[url_stub][user_name]'.
+    The stored social_link value must adhere to the form 'https://www.[url_stub][username]'.
     """
     user_profile = models.ForeignKey(UserProfile, db_index=True, related_name='social_links')
     platform = models.CharField(max_length=30)

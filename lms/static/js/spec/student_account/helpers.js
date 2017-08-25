@@ -69,17 +69,17 @@ define(['underscore'], function(_) {
         facebook: {
             display_name: 'Facebook',
             url_stub: 'facebook.com/',
-            example: 'https://www.facebook.com/edX'
+            example: 'https://www.facebook.com/username'
         },
         twitter: {
             display_name: 'Twitter',
             url_stub: 'twitter.com/',
-            example: 'https://www.twitter.com/edXOnline'
+            example: 'https://www.twitter.com/username'
         },
         linkedin: {
             display_name: 'LinkedIn',
             url_stub: 'linkedin.com/in/',
-            example: 'www.linkedin.com/in/agarwaledu/'
+            example: 'https://www.linkedin.com/in/profile-id'
         }
     };
     var DEFAULT_ACCOUNT_SETTINGS_DATA = {

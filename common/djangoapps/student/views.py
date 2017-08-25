@@ -2737,7 +2737,7 @@ def validate_social_link(social_field, new_social_link):
     # Check if the link is blank
     is_empty = not new_social_link
 
-    # Ensure that the new link has the either correct website url, a valid username or is empty
+    # Ensure that the new link has either the correct website url, a valid username or is empty.
     if not (contains_social_url or contains_valid_username or is_empty):
         raise ValueError(_(
             ' Make sure that you are providing a valid username or a URL that contains "' +
