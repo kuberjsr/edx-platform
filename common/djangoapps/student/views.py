@@ -2729,7 +2729,8 @@ def validate_social_link(social_field, new_social_link):
     """
     # Check if the link contains a valid url to the core domain
     required_url_stub = settings.SOCIAL_PLATFORMS[social_field]['url_stub']
-    contains_social_url = required_url_stub in new_social_link
+    contains_social_url = required_url_stub in new_social_link \
+                          and '.' not in new_social_link.replace(required_url_stub, '')
 
     # Check if the link contains a valid username
     contains_valid_username = is_valid_username(new_social_link)
@@ -2759,9 +2760,10 @@ def format_social_link(social_field, new_social_link):
     if not new_social_link:
         return new_social_link
 
+    url_stub = settings.SOCIAL_PLATFORMS[social_field]['url_stub']
     if is_valid_username(new_social_link):
         # Usernames are formatted according to the base url string
-        return 'https://www.{}{}'.format(settings.SOCIAL_PLATFORMS[social_field]['url_stub'], new_social_link)
+        return 'https://www.{}{}'.format(url_stub, new_social_link)
     else:
         # URLs must be formatted with a 'https://www.' prefix with no hanging '/'
         # Strip either the 'http://' or 'https://' prefix
@@ -2773,7 +2775,10 @@ def format_social_link(social_field, new_social_link):
         # Ensure we do not have a hanging forward slash to ensure compatibility with underscore templating
         new_social_link = new_social_link[:-1] if new_social_link[-1:] == '/' else new_social_link
 
-        return 'https://www.{}'.format(new_social_link)
+        # Strip out the username and return formatted string
+        username = new_social_link.replace(url_stub, '')
+
+        return 'https://www.{}{}'.format(url_stub, username)
 
 
 def is_valid_username(value):
