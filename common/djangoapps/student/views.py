@@ -2745,6 +2745,7 @@ def validate_social_link(social_field, new_social_link):
             required_url_stub + '". To remove the link from your edX profile, leave this field blank.'
         ))
 
+
 def get_username_from_social_link(social_field, new_social_link):
     """
     Given a valid social link for a user, parse and return only the
@@ -2757,13 +2758,12 @@ def get_username_from_social_link(social_field, new_social_link):
     # Strip the "www." if it exists
     new_social_link = new_social_link.split("www.")[1] if "www." in new_social_link else new_social_link
 
-    # Ensure we do not have a hanging forward slash to ensure compatibility with underscore templating
-    new_social_link = new_social_link[:-1] if new_social_link[-1:] == '/' else new_social_link
-
     # Strip out the username and return formatted string
-    username = new_social_link.replace(settings.SOCIAL_PLATFORMS[social_field]['url_stub'] , '')
+    username = new_social_link.replace(settings.SOCIAL_PLATFORMS[social_field]['url_stub'], '')
+    username = username.split('/')[0]
 
     return username
+
 
 def format_social_link(social_field, new_social_link):
     """
@@ -2784,6 +2784,7 @@ def format_social_link(social_field, new_social_link):
         else get_username_from_social_link(social_field, new_social_link)
 
     return 'https://www.{}{}'.format(url_stub, username)
+
 
 def is_valid_username(value):
     """

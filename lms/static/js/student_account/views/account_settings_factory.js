@@ -195,7 +195,7 @@
             // Add the social link fields
             socialFields = {
                 title: gettext('Social Media Links'),
-                subtitle: gettext('Optionally, add links to your social media accounts on your edX profile.'),
+                subtitle: gettext('Optionally, link your personal accounts to the social media icons on your edX profile.'),  // eslint-disable-line max-len
                 fields: []
             };
 
@@ -208,8 +208,8 @@
                             title: gettext(platformData.display_name + ' Link'),
                             valueAttribute: 'social_links',
                             helpMessage: gettext(
-                                'Enter a link to your personal ' + platformData.display_name + ' page, using ' +
-                                'the URL or your username.'
+                                'Enter your ' + platformData.display_name + ' username or the URL to your ' +
+                                platformData.display_name + ' page. Delete the URL to remove the link.'
                             ),
                             platform: socialPlatform,
                             persistChanges: true,
